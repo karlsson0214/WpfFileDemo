@@ -79,6 +79,25 @@ namespace WpfFileDemo
         /// <summary>
         /// Read and display the file.
         /// </summary>
+        private void ReadFileAllAtOnce()
+        {
+            try
+            {
+                // Open the text file using a stream reader.
+                using (var sr = new StreamReader(pathAndFileName))
+                {
+                    // Read the stream as a string, and write the string to GUI.
+                    FileContent.Text = sr.ReadToEnd();
+                }
+            }
+            catch (IOException e)
+            {
+                FileContent.Text = "The file could not be read:" + e.Message;
+            }
+        }
+        /// <summary>
+        /// Read and display the file. 
+        /// </summary>
         private void ReadFile()
         {
             try
@@ -86,8 +105,15 @@ namespace WpfFileDemo
                 // Open the text file using a stream reader.
                 using (var sr = new StreamReader(pathAndFileName))
                 {
-                    // Read the stream as a string, and write the string to the console.
-                    FileContent.Text = sr.ReadToEnd();
+                    // Read the file row by row. Display in GUI.
+                    FileContent.Text = "";
+                    // Read first line in file. The method ReadLine will return null when the end of file is reached.
+                    string row = sr.ReadLine();
+                    while (row != null)
+                    {
+                        FileContent.Text += row + Environment.NewLine;
+                        row = sr.ReadLine(); // Will read next line.
+                    }
                 }
             }
             catch (IOException e)
